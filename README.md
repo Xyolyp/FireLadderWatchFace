@@ -32,3 +32,5 @@ The watch face is implemented declaratively in `watchface/src/main/res/raw/watch
 - The project targets Wear OS API 33+, which makes it suitable for the Pixel Watch 1.
 - The blue lights flash intentionally instead of staying lit. The logic lives directly in `watchface.xml` and can easily be changed to a steady light.
 - The geometry is built entirely from WFF vector primitives; the watch face itself has no bitmap dependency.
+
+<!-- CI smoke test -->
