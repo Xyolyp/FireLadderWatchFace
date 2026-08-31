@@ -17,7 +17,27 @@ A Watch Face Format (WFF) v1 watch face featuring a fire-service aerial ladder t
 
 The watch face is implemented declaratively in `watchface/src/main/res/raw/watchface.xml`. It intentionally contains no app code; the manifest uses `android:hasCode="false"`.
 
-## Installing with Android Studio
+## How to install (prebuilt APK)
+
+Every commit to `main` publishes a signed APK under [Releases](https://github.com/Xyolyp/FireLadderWatchFace/releases).
+
+1. Download the `FireLadderWatchFace-*.apk` from the latest release.
+2. On the watch, enable developer options: Settings → System → About → tap "Build number" seven times.
+3. Enable Settings → Developer options → Wireless debugging, and make sure watch and computer are on the same Wi-Fi network.
+4. In Wireless debugging, choose "Pair new device" and pair from the computer:
+   ```
+   adb pair <ip>:<pairing-port>   # enter the code shown on the watch
+   adb connect <ip>:<port>        # port shown on the Wireless debugging main screen
+   ```
+5. Install the APK:
+   ```
+   adb install FireLadderWatchFace-<version>.apk
+   ```
+6. Long-press the current watch face on the watch and select `Drehleiter` from the picker.
+
+Updates install the same way; since all releases are signed with the same key, no uninstall is needed.
+
+## Building and installing with Android Studio
 
 1. Open the project folder in Android Studio.
 2. If Android Studio asks for Android SDK 35, let it install.
