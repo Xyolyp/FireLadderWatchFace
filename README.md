@@ -26,7 +26,7 @@ Preparation on the watch (needed for either route — Wear OS only allows sidelo
 1. Enable developer options: Settings → System → About → tap "Build number" seven times.
 2. Enable Settings → Developer options → Wireless debugging. The watch must be on the same Wi-Fi network as the phone or computer.
 
-Updates install the same way as a first install; since all releases are signed with the same key, no uninstall is needed. After installing, long-press the current watch face on the watch and select `Drehleiter` from the picker.
+Updates install the same way as a first install; since all releases are signed with the same key, no uninstall is needed. After installing, long-press the current watch face on the watch and select `Aerial Ladder` (German: `Drehleiter`) from the picker.
 
 ### With an Android phone (no computer, no adb)
 
@@ -56,7 +56,7 @@ Updates install the same way as a first install; since all releases are signed w
    `gradle wrapper --gradle-version 9.2.1`
 4. Connect the Pixel Watch to Android Studio via wireless debugging / ADB.
 5. Launch the run configuration for the `watchface` module.
-6. Select the `Drehleiter` watch face on the watch.
+6. Select the `Aerial Ladder` (German: `Drehleiter`) watch face on the watch.
 
 ## Notes
 
