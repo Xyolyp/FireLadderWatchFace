@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="450" height="450">
+    <Metadata key="CLOCK_TYPE" value="ANALOG" />
+    <Metadata key="PREVIEW_TIME" value="10:00:12" />
+
+    <Scene backgroundColor="#000000">
+        <!-- Subtle orientation-reactive dial. The time-bearing parts remain fixed to the center. -->
+        <Group x="0" y="0" width="450" height="450" name="tilt_dial" alpha="150">
+            <Variant mode="AMBIENT" target="alpha" value="80" />
+            <Gyro x="[ACCELEROMETER_ANGLE_X] * -0.35"
+                  y="[ACCELEROMETER_ANGLE_Y] * -0.35" />
+            <PartDraw x="0" y="0" width="450" height="450">
+                <Ellipse x="43" y="43" width="364" height="364">
+                    <Stroke color="#2A2D32" thickness="2" />
+                </Ellipse>
+
+                <!-- 12 understated hour markers -->
+                <Ellipse x="220" y="31" width="10" height="10"><Fill color="#B7BBC2" /></Ellipse>
+                <Ellipse x="314" y="56" width="8" height="8"><Fill color="#767B83" /></Ellipse>
+                <Ellipse x="384" y="126" width="8" height="8"><Fill color="#767B83" /></Ellipse>
+                <Ellipse x="409" y="221" width="10" height="10"><Fill color="#B7BBC2" /></Ellipse>
+                <Ellipse x="384" y="316" width="8" height="8"><Fill color="#767B83" /></Ellipse>
+                <Ellipse x="314" y="386" width="8" height="8"><Fill color="#767B83" /></Ellipse>
+                <Ellipse x="220" y="409" width="10" height="10"><Fill color="#B7BBC2" /></Ellipse>
+                <Ellipse x="128" y="386" width="8" height="8"><Fill color="#767B83" /></Ellipse>
+                <Ellipse x="58" y="316" width="8" height="8"><Fill color="#767B83" /></Ellipse>
+                <Ellipse x="31" y="221" width="10" height="10"><Fill color="#B7BBC2" /></Ellipse>
+                <Ellipse x="58" y="126" width="8" height="8"><Fill color="#767B83" /></Ellipse>
+                <Ellipse x="128" y="56" width="8" height="8"><Fill color="#767B83" /></Ellipse>
+            </PartDraw>
+        </Group>
+
+        <!-- Hour hand: complete fire engine body, seen from above. -->
+        <Group x="0" y="0" width="450" height="450" name="hour_fire_engine" pivotX="0.5" pivotY="0.5">
+            <Variant mode="AMBIENT" target="alpha" value="150" />
+            <Transform target="angle" value="[HOUR_0_11_MINUTE] * 30" />
+
+            <!-- Soft shadow, active mode only. -->
+            <PartDraw x="0" y="0" width="450" height="450" alpha="80">
+                <Variant mode="AMBIENT" target="alpha" value="0" />
+                <RoundRectangle x="194" y="82" width="74" height="235" cornerRadiusX="18" cornerRadiusY="18">
+                    <Fill color="#000000" />
+                </RoundRectangle>
+            </PartDraw>
+
+            <!-- Chassis and body -->
+            <PartDraw x="0" y="0" width="450" height="450">
+                <RoundRectangle x="190" y="92" width="70" height="216" cornerRadiusX="14" cornerRadiusY="14">
+                    <Fill color="#C51F28" />
+                </RoundRectangle>
+                <RoundRectangle x="184" y="69" width="82" height="76" cornerRadiusX="18" cornerRadiusY="18">
+                    <Fill color="#D82B34" />
+                </RoundRectangle>
+
+                <!-- Cab windows -->
+                <RoundRectangle x="194" y="78" width="62" height="25" cornerRadiusX="7" cornerRadiusY="7">
+                    <Fill color="#25313C" />
+                </RoundRectangle>
+                <Rectangle x="193" y="108" width="64" height="8"><Fill color="#F4F4F4" /></Rectangle>
+
+                <!-- Equipment compartments / white fire-service stripe -->
+                <Rectangle x="190" y="161" width="70" height="12"><Fill color="#F5F5F5" /></Rectangle>
+                <Rectangle x="196" y="183" width="58" height="38"><Fill color="#A9161E" /></Rectangle>
+                <Rectangle x="196" y="231" width="58" height="44"><Fill color="#A9161E" /></Rectangle>
+                <Rectangle x="197" y="286" width="56" height="13"><Fill color="#F5F5F5" /></Rectangle>
+
+                <!-- Wheels -->
+                <RoundRectangle x="178" y="118" width="15" height="44" cornerRadiusX="5" cornerRadiusY="5"><Fill color="#141518" /></RoundRectangle>
+                <RoundRectangle x="257" y="118" width="15" height="44" cornerRadiusX="5" cornerRadiusY="5"><Fill color="#141518" /></RoundRectangle>
+                <RoundRectangle x="178" y="259" width="15" height="44" cornerRadiusX="5" cornerRadiusY="5"><Fill color="#141518" /></RoundRectangle>
+                <RoundRectangle x="257" y="259" width="15" height="44" cornerRadiusX="5" cornerRadiusY="5"><Fill color="#141518" /></RoundRectangle>
+
+                <!-- Headlights -->
+                <Ellipse x="191" y="66" width="12" height="8"><Fill color="#E9D98A" /></Ellipse>
+                <Ellipse x="247" y="66" width="12" height="8"><Fill color="#E9D98A" /></Ellipse>
+            </PartDraw>
+
+            <!--
+                Emergency lights.
+                Final mode: active only during minute 00.
+                For permanent testing, replace "[MINUTE] == 0" below with "1".
+            -->
+            <Condition>
+                <Expressions>
+                    <Expression name="blue_lights_active">
+                        <![CDATA[[MINUTE] == 0 || true]]>
+                    </Expression>
+                </Expressions>
+
+                <Compare expression="blue_lights_active">
+                    <Group x="0" y="0" width="450" height="450"
+                        name="blue_light_system">
+
+                        <!-- No emergency-light animation in ambient/AOD mode. -->
+                        <Variant mode="AMBIENT" target="alpha" value="0" />
+
+                        <!-- =====================================================
+                             FLASH GROUP A - LEFT SIDE
+                             Double pulse:
+                             0-75 ms
+                             145-220 ms
+                             ===================================================== -->
+                        <Group x="0" y="0" width="450" height="450"
+                            name="blue_flash_left">
+
+                            <Transform
+                                target="alpha"
+                                value="([MILLISECOND] &lt; 120 ||
+                                   ([MILLISECOND] &gt;= 180 &amp;&amp;
+                                    [MILLISECOND] &lt; 300))
+                                   ? 255 : 0" />
+
+                            <!-- Actual LED emitters -->
+                            <PartDraw x="0" y="0" width="450" height="450">
+
+                                <!-- Main roof beacon / cab beacon LEFT -->
+                                <Ellipse x="187" y="89" width="20" height="20">
+                                    <Fill color="#168CFF" />
+                                </Ellipse>
+                                <Ellipse x="192" y="94" width="10" height="10">
+                                    <Fill color="#D8F3FF" />
+                                </Ellipse>
+
+                                <!-- Front grille flasher LEFT -->
+                                <RoundRectangle
+                                    x="207" y="67"
+                                    width="14" height="7"
+                                    cornerRadiusX="3"
+                                    cornerRadiusY="3">
+                                    <Fill color="#35A4FF" />
+                                </RoundRectangle>
+
+                                <!-- Front-side flasher LEFT -->
+                                <RoundRectangle
+                                    x="183" y="137"
+                                    width="8" height="15"
+                                    cornerRadiusX="3"
+                                    cornerRadiusY="3">
+                                    <Fill color="#239AFF" />
+                                </RoundRectangle>
+
+                                <!-- Rear-side flasher LEFT -->
+                                <RoundRectangle
+                                    x="183" y="259"
+                                    width="8" height="15"
+                                    cornerRadiusX="3"
+                                    cornerRadiusY="3">
+                                    <Fill color="#239AFF" />
+                                </RoundRectangle>
+
+                                <!-- Rear flasher LEFT -->
+                                <RoundRectangle
+                                    x="198" y="298"
+                                    width="16" height="7"
+                                    cornerRadiusX="3"
+                                    cornerRadiusY="3">
+                                    <Fill color="#35A4FF" />
+                                </RoundRectangle>
+
+                            </PartDraw>
+
+                            <!-- Glow around the LEDs -->
+                            <PartDraw x="0" y="0" width="450" height="450"
+                                alpha="110">
+
+                                <Ellipse x="181" y="83" width="32" height="32">
+                                    <Stroke color="#168CFF" thickness="3" />
+                                </Ellipse>
+
+                                <RoundRectangle
+                                    x="203" y="64"
+                                    width="22" height="13"
+                                    cornerRadiusX="5"
+                                    cornerRadiusY="5">
+                                    <Stroke color="#168CFF" thickness="2" />
+                                </RoundRectangle>
+
+                                <RoundRectangle
+                                    x="194" y="295"
+                                    width="24" height="13"
+                                    cornerRadiusX="5"
+                                    cornerRadiusY="5">
+                                    <Stroke color="#168CFF" thickness="2" />
+                                </RoundRectangle>
+
+                            </PartDraw>
+                        </Group>
+
+
+                        <!-- =====================================================
+                             FLASH GROUP B - RIGHT SIDE
+                             Double pulse:
+                             500-575 ms
+                             645-720 ms
+                             ===================================================== -->
+                        <Group x="0" y="0" width="450" height="450"
+                            name="blue_flash_right">
+
+                            <Transform
+                                target="alpha"
+                                value="(([MILLISECOND] &gt;= 500 &amp;&amp;
+                                     [MILLISECOND] &lt; 620) ||
+                                    ([MILLISECOND] &gt;= 680 &amp;&amp;
+                                     [MILLISECOND] &lt; 800))
+                                   ? 255 : 0" />
+
+                            <!-- Actual LED emitters -->
+                            <PartDraw x="0" y="0" width="450" height="450">
+
+                                <!-- Main roof beacon / cab beacon RIGHT -->
+                                <Ellipse x="243" y="89" width="20" height="20">
+                                    <Fill color="#168CFF" />
+                                </Ellipse>
+                                <Ellipse x="248" y="94" width="10" height="10">
+                                    <Fill color="#D8F3FF" />
+                                </Ellipse>
+
+                                <!-- Front grille flasher RIGHT -->
+                                <RoundRectangle
+                                    x="229" y="67"
+                                    width="14" height="7"
+                                    cornerRadiusX="3"
+                                    cornerRadiusY="3">
+                                    <Fill color="#35A4FF" />
+                                </RoundRectangle>
+
+                                <!-- Front-side flasher RIGHT -->
+                                <RoundRectangle
+                                    x="259" y="137"
+                                    width="8" height="15"
+                                    cornerRadiusX="3"
+                                    cornerRadiusY="3">
+                                    <Fill color="#239AFF" />
+                                </RoundRectangle>
+
+                                <!-- Rear-side flasher RIGHT -->
+                                <RoundRectangle
+                                    x="259" y="259"
+                                    width="8" height="15"
+                                    cornerRadiusX="3"
+                                    cornerRadiusY="3">
+                                    <Fill color="#239AFF" />
+                                </RoundRectangle>
+
+                                <!-- Rear flasher RIGHT -->
+                                <RoundRectangle
+                                    x="236" y="298"
+                                    width="16" height="7"
+                                    cornerRadiusX="3"
+                                    cornerRadiusY="3">
+                                    <Fill color="#35A4FF" />
+                                </RoundRectangle>
+
+                            </PartDraw>
+
+                            <!-- Glow around the LEDs -->
+                            <PartDraw x="0" y="0" width="450" height="450"
+                                alpha="110">
+
+                                <Ellipse x="237" y="83" width="32" height="32">
+                                    <Stroke color="#168CFF" thickness="3" />
+                                </Ellipse>
+
+                                <RoundRectangle
+                                    x="225" y="64"
+                                    width="22" height="13"
+                                    cornerRadiusX="5"
+                                    cornerRadiusY="5">
+                                    <Stroke color="#168CFF" thickness="2" />
+                                </RoundRectangle>
+
+                                <RoundRectangle
+                                    x="232" y="295"
+                                    width="24" height="13"
+                                    cornerRadiusX="5"
+                                    cornerRadiusY="5">
+                                    <Stroke color="#168CFF" thickness="2" />
+                                </RoundRectangle>
+
+                            </PartDraw>
+                        </Group>
+
+                    </Group>
+                </Compare>
+            </Condition>
+        </Group>
+
+        <!-- Minute hand: aerial ladder, independently rotating around the turntable. -->
+        <Group x="0" y="0" width="450" height="450" name="minute_ladder" pivotX="0.5" pivotY="0.5">
+            <Variant mode="AMBIENT" target="alpha" value="185" />
+            <Transform target="angle" value="[MINUTE_SECOND] * 6" />
+
+            <PartDraw x="0" y="0" width="450" height="450">
+                <!-- Main rails -->
+                <Line startX="210" startY="226" endX="210" endY="62"><Stroke color="#D7DADD" thickness="6" /></Line>
+                <Line startX="240" startY="226" endX="240" endY="62"><Stroke color="#D7DADD" thickness="6" /></Line>
+                <!-- Inner red telescopic rail -->
+                <Line startX="218" startY="222" endX="218" endY="79"><Stroke color="#C51F28" thickness="4" /></Line>
+                <Line startX="232" startY="222" endX="232" endY="79"><Stroke color="#C51F28" thickness="4" /></Line>
+
+                <!-- Rungs -->
+                <Line startX="209" startY="207" endX="241" endY="207"><Stroke color="#EFF1F2" thickness="4" /></Line>
+                <Line startX="209" startY="188" endX="241" endY="188"><Stroke color="#EFF1F2" thickness="4" /></Line>
+                <Line startX="209" startY="169" endX="241" endY="169"><Stroke color="#EFF1F2" thickness="4" /></Line>
+                <Line startX="209" startY="150" endX="241" endY="150"><Stroke color="#EFF1F2" thickness="4" /></Line>
+                <Line startX="209" startY="131" endX="241" endY="131"><Stroke color="#EFF1F2" thickness="4" /></Line>
+                <Line startX="209" startY="112" endX="241" endY="112"><Stroke color="#EFF1F2" thickness="4" /></Line>
+                <Line startX="209" startY="93" endX="241" endY="93"><Stroke color="#EFF1F2" thickness="4" /></Line>
+                <Line startX="209" startY="74" endX="241" endY="74"><Stroke color="#EFF1F2" thickness="4" /></Line>
+
+                <!-- Rescue basket points to the minute -->
+                <RoundRectangle x="199" y="35" width="52" height="35" cornerRadiusX="7" cornerRadiusY="7">
+                    <Stroke color="#F0F1F2" thickness="5" />
+                </RoundRectangle>
+                <Line startX="205" startY="53" endX="245" endY="53"><Stroke color="#C51F28" thickness="4" /></Line>
+            </PartDraw>
+        </Group>
+
+        <!-- Fixed central turntable -->
+        <PartDraw x="0" y="0" width="450" height="450">
+            <Ellipse x="197" y="197" width="56" height="56"><Fill color="#15171A" /></Ellipse>
+            <Ellipse x="203" y="203" width="44" height="44"><Stroke color="#E9EAEC" thickness="4" /></Ellipse>
+            <Ellipse x="215" y="215" width="20" height="20"><Fill color="#C51F28" /></Ellipse>
+        </PartDraw>
+    </Scene>
+</WatchFace>

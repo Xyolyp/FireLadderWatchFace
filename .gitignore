@@ -1,0 +1,13 @@
+# Gradle
+.gradle/
+build/
+gradle-app.setting
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+captures/
+.kotlin/
+
+# Local configuration
+local.properties
