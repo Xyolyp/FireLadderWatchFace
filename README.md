@@ -1,34 +1,34 @@
-# Drehleiter Watchface (Pixel Watch / Wear OS)
+# Aerial Ladder Watch Face (Pixel Watch / Wear OS)
 
-Ein Watch Face Format (WFF) v1 Watchface mit einer Feuerwehr-Drehleiter als analoger Uhr.
+A Watch Face Format (WFF) v1 watch face featuring a fire-service aerial ladder truck as an analog clock.
 
-![Preview des Watchfaces (10:00 Uhr)](watchface/src/main/res/drawable/preview.png)
+![Watch face preview (10:00)](watchface/src/main/res/drawable/preview.png)
 
-## Anzeige
+## Display
 
-- Feuerwehrfahrzeug von oben = Stundenzeiger
-- Drehteller = Mittelpunkt
-- ausgefahrene Drehleiter + Korb = Minutenzeiger
-- zur vollen Stunde (`MINUTE == 0`) blinken die beiden Blaulichter 60 Sekunden lang abwechselnd
-- Blaulicht ist im Ambient / Always-on-Display deaktiviert
-- das dezente Zifferblatt reagiert leicht auf die Neigung der Uhr; die eigentlichen Zeiger bleiben geometrisch am Mittelpunkt, damit die Uhrzeit korrekt bleibt
+- Fire engine seen from above = hour hand
+- Turntable = center
+- Extended aerial ladder + rescue basket = minute hand
+- At the top of the hour (`MINUTE == 0`) the two blue emergency lights flash alternately for 60 seconds
+- The blue lights are disabled in ambient / always-on display mode
+- The subtle dial reacts slightly to the watch's tilt; the actual hands stay geometrically fixed to the center so the time remains accurate
 
-## Projekt
+## Project
 
-Das Watchface ist deklarativ in `watchface/src/main/res/raw/watchface.xml` umgesetzt. Es enthält absichtlich keinen App-Code; das Manifest verwendet `android:hasCode="false"`.
+The watch face is implemented declaratively in `watchface/src/main/res/raw/watchface.xml`. It intentionally contains no app code; the manifest uses `android:hasCode="false"`.
 
-## In Android Studio installieren
+## Installing with Android Studio
 
-1. Projektordner in Android Studio öffnen.
-2. Falls Android Studio nach dem Android SDK 35 fragt, installieren lassen.
-3. Falls noch kein Gradle Wrapper verfügbar ist, in einer vorhandenen Gradle-Installation einmal ausführen:
+1. Open the project folder in Android Studio.
+2. If Android Studio asks for Android SDK 35, let it install.
+3. If no Gradle wrapper is available yet, run once from an existing Gradle installation:
    `gradle wrapper --gradle-version 9.2.1`
-4. Pixel Watch per Wireless Debugging / ADB mit Android Studio verbinden.
-5. Run-Konfiguration für das Modul `watchface` starten.
-6. Das Watchface `Drehleiter` auf der Uhr auswählen.
+4. Connect the Pixel Watch to Android Studio via wireless debugging / ADB.
+5. Launch the run configuration for the `watchface` module.
+6. Select the `Drehleiter` watch face on the watch.
 
-## Hinweise
+## Notes
 
-- Das Projekt ist auf Wear OS API 33+ ausgelegt und damit für die Pixel Watch 1 geeignet.
-- Die Blaulichter blinken absichtlich statt dauerhaft zu leuchten. Die Logik steht direkt in `watchface.xml` und kann leicht auf Dauerlicht geändert werden.
-- Die Geometrie ist komplett aus WFF-Vektorprimitiven aufgebaut; es gibt keine Bitmap-Abhängigkeit für das eigentliche Watchface.
+- The project targets Wear OS API 33+, which makes it suitable for the Pixel Watch 1.
+- The blue lights flash intentionally instead of staying lit. The logic lives directly in `watchface.xml` and can easily be changed to a steady light.
+- The geometry is built entirely from WFF vector primitives; the watch face itself has no bitmap dependency.
