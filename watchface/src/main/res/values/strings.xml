@@ -4,5 +4,8 @@
     <string name="blue_light_mode">Blue lights</string>
     <string name="blue_light_mode_off">Off</string>
     <string name="blue_light_mode_hourly">On the hour</string>
+    <string name="blue_light_mode_notification">On notifications</string>
     <string name="blue_light_mode_always">Always on</string>
+    <string name="water_tank">Water tank (battery)</string>
+    <string name="call_sign">Call sign (date)</string>
 </resources>
