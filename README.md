@@ -2,6 +2,8 @@
 
 Ein Watch Face Format (WFF) v1 Watchface mit einer Feuerwehr-Drehleiter als analoger Uhr.
 
+![Preview des Watchfaces (10:00 Uhr)](watchface/src/main/res/drawable/preview.png)
+
 ## Anzeige
 
 - Feuerwehrfahrzeug von oben = Stundenzeiger
