@@ -83,7 +83,7 @@
             <Condition>
                 <Expressions>
                     <Expression name="blue_lights_active">
-                        <![CDATA[[MINUTE] == 0 || true]]>
+                        <![CDATA[[MINUTE] == 0 || false]]>
                     </Expression>
                 </Expressions>
 
