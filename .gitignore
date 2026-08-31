@@ -11,3 +11,7 @@ captures/
 
 # Local configuration
 local.properties
+
+# Signing (kept only as GitHub secret KEYSTORE_B64)
+release.jks
+
