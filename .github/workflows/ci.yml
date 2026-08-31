@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+
+      # No signing here on purpose: pull requests build an unsigned APK,
+      # secrets are never exposed to PR builds.
+      - name: Build release APK (unsigned)
+        run: gradle :watchface:assembleRelease
+
+      - name: Run checks
+        run: gradle :watchface:lintRelease
