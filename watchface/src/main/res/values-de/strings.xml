@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="watch_face_name">Drehleiter</string>
+    <string name="blue_light_mode">Blaulicht</string>
+    <string name="blue_light_mode_off">Aus</string>
+    <string name="blue_light_mode_hourly">Zur vollen Stunde</string>
+    <string name="blue_light_mode_always">Immer an</string>
+</resources>

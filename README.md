@@ -9,7 +9,7 @@ A Watch Face Format (WFF) v1 watch face featuring a fire-service aerial ladder t
 - Fire engine seen from above = hour hand
 - Turntable = center
 - Extended aerial ladder + rescue basket = minute hand
-- At the top of the hour (`MINUTE == 0`) the two blue emergency lights flash alternately for 60 seconds
+- The two blue emergency lights flash alternately; when they do is configurable in the watch face editor on the watch (long-press the watch face → edit): "Off", "On the hour" (default, active during minute 00) or "Always on"
 - The blue lights are disabled in ambient / always-on display mode
 - The subtle dial reacts slightly to the watch's tilt; the actual hands stay geometrically fixed to the center so the time remains accurate
 
@@ -26,7 +26,7 @@ Preparation on the watch (needed for either route — Wear OS only allows sidelo
 1. Enable developer options: Settings → System → About → tap "Build number" seven times.
 2. Enable Settings → Developer options → Wireless debugging. The watch must be on the same Wi-Fi network as the phone or computer.
 
-Updates install the same way as a first install; since all releases are signed with the same key, no uninstall is needed. After installing, long-press the current watch face on the watch and select `Drehleiter` from the picker.
+Updates install the same way as a first install; since all releases are signed with the same key, no uninstall is needed. After installing, long-press the current watch face on the watch and select `Aerial Ladder` (German: `Drehleiter`) from the picker.
 
 ### With an Android phone (no computer, no adb)
 
@@ -56,10 +56,10 @@ Updates install the same way as a first install; since all releases are signed w
    `gradle wrapper --gradle-version 9.2.1`
 4. Connect the Pixel Watch to Android Studio via wireless debugging / ADB.
 5. Launch the run configuration for the `watchface` module.
-6. Select the `Drehleiter` watch face on the watch.
+6. Select the `Aerial Ladder` (German: `Drehleiter`) watch face on the watch.
 
 ## Notes
 
 - The project targets Wear OS API 33+, which makes it suitable for the Pixel Watch 1.
-- The blue lights flash intentionally instead of staying lit. The logic lives directly in `watchface.xml` and can easily be changed to a steady light.
+- The blue lights flash intentionally instead of staying lit. The logic lives directly in `watchface.xml`; the off/hourly/always behavior is a WFF `ListConfiguration` user setting. Note that "Always on" costs noticeably more battery while the display is active.
 - The geometry is built entirely from WFF vector primitives; the watch face itself has no bitmap dependency.

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="watch_face_name">Drehleiter</string>
+    <string name="watch_face_name">Aerial Ladder</string>
+    <string name="blue_light_mode">Blue lights</string>
+    <string name="blue_light_mode_off">Off</string>
+    <string name="blue_light_mode_hourly">On the hour</string>
+    <string name="blue_light_mode_always">Always on</string>
 </resources>
