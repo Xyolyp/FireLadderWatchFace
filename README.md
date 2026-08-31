@@ -21,21 +21,32 @@ The watch face is implemented declaratively in `watchface/src/main/res/raw/watch
 
 Every commit to `main` publishes a signed APK under [Releases](https://github.com/Xyolyp/FireLadderWatchFace/releases).
 
+Preparation on the watch (needed for either route — Wear OS only allows sideloading through wireless debugging):
+
+1. Enable developer options: Settings → System → About → tap "Build number" seven times.
+2. Enable Settings → Developer options → Wireless debugging. The watch must be on the same Wi-Fi network as the phone or computer.
+
+Updates install the same way as a first install; since all releases are signed with the same key, no uninstall is needed. After installing, long-press the current watch face on the watch and select `Drehleiter` from the picker.
+
+### With an Android phone (no computer, no adb)
+
+1. Install [Wear Installer 2](https://play.google.com/store/apps/details?id=org.freepoc.wearinstaller2) from the Play Store on the phone.
+2. Download the `FireLadderWatchFace-*.apk` from the latest release onto the phone.
+3. In Wear Installer 2, enter the watch's IP address (shown under Wireless debugging) and pair using the code from "Pair new device" on the watch.
+4. On the "Custom APK" tab, select the downloaded APK and install it.
+
+### With a computer (adb)
+
 1. Download the `FireLadderWatchFace-*.apk` from the latest release.
-2. On the watch, enable developer options: Settings → System → About → tap "Build number" seven times.
-3. Enable Settings → Developer options → Wireless debugging, and make sure watch and computer are on the same Wi-Fi network.
-4. In Wireless debugging, choose "Pair new device" and pair from the computer:
+2. In Wireless debugging on the watch, choose "Pair new device" and pair from the computer:
    ```
    adb pair <ip>:<pairing-port>   # enter the code shown on the watch
    adb connect <ip>:<port>        # port shown on the Wireless debugging main screen
    ```
-5. Install the APK:
+3. Install the APK:
    ```
    adb install FireLadderWatchFace-<version>.apk
    ```
-6. Long-press the current watch face on the watch and select `Drehleiter` from the picker.
-
-Updates install the same way; since all releases are signed with the same key, no uninstall is needed.
 
 ## Building and installing with Android Studio
 
