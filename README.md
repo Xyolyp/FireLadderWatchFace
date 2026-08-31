@@ -9,7 +9,7 @@ A Watch Face Format (WFF) v1 watch face featuring a fire-service aerial ladder t
 - Fire engine seen from above = hour hand
 - Turntable = center
 - Extended aerial ladder + rescue basket = minute hand
-- At the top of the hour (`MINUTE == 0`) the two blue emergency lights flash alternately for 60 seconds
+- The two blue emergency lights flash alternately; when they do is configurable in the watch face editor on the watch (long-press the watch face → edit): "Off", "On the hour" (default, active during minute 00) or "Always on"
 - The blue lights are disabled in ambient / always-on display mode
 - The subtle dial reacts slightly to the watch's tilt; the actual hands stay geometrically fixed to the center so the time remains accurate
 
@@ -61,5 +61,5 @@ Updates install the same way as a first install; since all releases are signed w
 ## Notes
 
 - The project targets Wear OS API 33+, which makes it suitable for the Pixel Watch 1.
-- The blue lights flash intentionally instead of staying lit. The logic lives directly in `watchface.xml` and can easily be changed to a steady light.
+- The blue lights flash intentionally instead of staying lit. The logic lives directly in `watchface.xml`; the off/hourly/always behavior is a WFF `ListConfiguration` user setting. Note that "Always on" costs noticeably more battery while the display is active.
 - The geometry is built entirely from WFF vector primitives; the watch face itself has no bitmap dependency.

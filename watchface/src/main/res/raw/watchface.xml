@@ -3,6 +3,17 @@
     <Metadata key="CLOCK_TYPE" value="ANALOG" />
     <Metadata key="PREVIEW_TIME" value="10:00:12" />
 
+    <UserConfigurations>
+        <ListConfiguration id="blueLightMode"
+            displayName="@string/blue_light_mode"
+            screenReaderText="@string/blue_light_mode"
+            defaultValue="hourly">
+            <ListOption id="off" displayName="@string/blue_light_mode_off" />
+            <ListOption id="hourly" displayName="@string/blue_light_mode_hourly" />
+            <ListOption id="always" displayName="@string/blue_light_mode_always" />
+        </ListConfiguration>
+    </UserConfigurations>
+
     <Scene backgroundColor="#000000">
         <!-- Subtle orientation-reactive dial. The time-bearing parts remain fixed to the center. -->
         <Group x="0" y="0" width="450" height="450" name="tilt_dial" alpha="150">
@@ -77,13 +88,13 @@
 
             <!--
                 Emergency lights.
-                Final mode: active only during minute 00.
-                For permanent testing, replace "[MINUTE] == 0" below with "1".
+                Driven by the user configuration "blueLightMode":
+                off / hourly (active during minute 00) / always.
             -->
             <Condition>
                 <Expressions>
                     <Expression name="blue_lights_active">
-                        <![CDATA[[MINUTE] == 0 || false]]>
+                        <![CDATA[[CONFIGURATION.blueLightMode] == "always" || ([CONFIGURATION.blueLightMode] == "hourly" && [MINUTE] == 0)]]>
                     </Expression>
                 </Expressions>
 
