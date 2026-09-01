@@ -9,9 +9,22 @@ A Watch Face Format (WFF) v1 watch face featuring a fire-service aerial ladder t
 - Fire engine seen from above = hour hand
 - Turntable = center
 - Extended aerial ladder + rescue basket = minute hand
-- The two blue emergency lights flash alternately; when they do is configurable in the watch face editor on the watch (long-press the watch face → edit): "Off", "On the hour" (default, active during minute 00) or "Always on"
-- The blue lights are disabled in ambient / always-on display mode
+- The dial fades between a night and a daylight background, crossfading over an hour at dawn and dusk. At night the head lamps, their beams and the tail lamps are lit.
+- The water tank on the truck doubles as the battery gauge: the fill level is the charge level, and below 15 % the remaining water and the empty volume turn red.
+- A call-sign plate on the roof carries the date as `DD/MM`. It rides on the truck, so it turns with the hour hand.
+- The two blue emergency lights flash alternately; when they do is configurable: "Off", "On the hour" (default, active during minute 00), "On notifications" (while unread notifications are pending) or "Always on"
+- The blue lights, the driving lights and the day background are disabled in ambient / always-on display mode
 - The subtle dial reacts slightly to the watch's tilt; the actual hands stay geometrically fixed to the center so the time remains accurate
+
+Water tank and call-sign plate can each be switched off in the watch face editor on the watch (long-press the watch face → edit), along with the blue-light mode.
+
+## Screenshots
+
+Mock-ups rendered from the watch face geometry, not photographs of a device.
+
+![Day, dusk and night](docs/screenshots/day-night.png)
+
+![Water tank, notification mode and plain dial](docs/screenshots/features.png)
 
 ## Project
 
@@ -61,5 +74,6 @@ Updates install the same way as a first install; since all releases are signed w
 ## Notes
 
 - The project targets Wear OS API 33+, which makes it suitable for the Pixel Watch 1.
-- The blue lights flash intentionally instead of staying lit. The logic lives directly in `watchface.xml`; the off/hourly/always behavior is a WFF `ListConfiguration` user setting. Note that "Always on" costs noticeably more battery while the display is active.
+- The blue lights flash intentionally instead of staying lit. The logic lives directly in `watchface.xml`; the behavior is a WFF `ListConfiguration` user setting. Note that "Always on" costs noticeably more battery while the display is active.
+- Day and night are derived from the local time (`SECONDS_IN_DAY`), not from sunrise data, so no weather provider or extra permission is involved.
 - The geometry is built entirely from WFF vector primitives; the watch face itself has no bitmap dependency.

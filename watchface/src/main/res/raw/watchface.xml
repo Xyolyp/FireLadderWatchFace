@@ -10,11 +10,46 @@
             defaultValue="hourly">
             <ListOption id="off" displayName="@string/blue_light_mode_off" />
             <ListOption id="hourly" displayName="@string/blue_light_mode_hourly" />
+            <ListOption id="notification" displayName="@string/blue_light_mode_notification" />
             <ListOption id="always" displayName="@string/blue_light_mode_always" />
         </ListConfiguration>
+
+        <BooleanConfiguration id="showWaterTank"
+            displayName="@string/water_tank"
+            screenReaderText="@string/water_tank"
+            defaultValue="TRUE" />
+
+        <BooleanConfiguration id="showCallSign"
+            displayName="@string/call_sign"
+            screenReaderText="@string/call_sign"
+            defaultValue="TRUE" />
     </UserConfigurations>
 
     <Scene backgroundColor="#000000">
+        <!--
+            Daylight background.
+            The scene itself is black (night). This layer fades in over it, so the
+            crossfade between night and day is a single alpha ramp:
+              dawn  06:00 - 07:00
+              dusk  19:00 - 20:00
+            Both clamps saturate at 1 during the day, so their product is the
+            daylight factor. It is reused (inverted) by the night lights below.
+        -->
+        <Group x="0" y="0" width="450" height="450" name="day_background">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <Transform target="alpha"
+                value="255 * clamp(([SECONDS_IN_DAY] - 21600) / 3600, 0, 1)
+                           * clamp((72000 - [SECONDS_IN_DAY]) / 3600, 0, 1)" />
+            <PartDraw x="0" y="0" width="450" height="450">
+                <Ellipse x="0" y="0" width="450" height="450">
+                    <Fill color="#101C28" />
+                </Ellipse>
+                <Ellipse x="43" y="43" width="364" height="364">
+                    <Fill color="#16242F" />
+                </Ellipse>
+            </PartDraw>
+        </Group>
+
         <!-- Subtle orientation-reactive dial. The time-bearing parts remain fixed to the center. -->
         <Group x="0" y="0" width="450" height="450" name="tilt_dial" alpha="150">
             <Variant mode="AMBIENT" target="alpha" value="80" />
@@ -74,6 +109,138 @@
                 <Rectangle x="196" y="183" width="58" height="38"><Fill color="#A9161E" /></Rectangle>
                 <Rectangle x="196" y="231" width="58" height="44"><Fill color="#A9161E" /></Rectangle>
                 <Rectangle x="197" y="286" width="56" height="13"><Fill color="#F5F5F5" /></Rectangle>
+            </PartDraw>
+
+            <!--
+                Water tank as a battery gauge.
+                The water rectangle spans the full tank window and is scaled
+                vertically around its lower edge (y = 282 of 450), so the fill
+                level equals the charge level.
+            -->
+            <Condition>
+                <Expressions>
+                    <Expression name="show_water_tank">
+                        <![CDATA[[CONFIGURATION.showWaterTank] == "TRUE"]]>
+                    </Expression>
+                </Expressions>
+
+                <Compare expression="show_water_tank">
+                    <Group x="0" y="0" width="450" height="450" name="water_tank">
+                        <!-- Tank well -->
+                        <PartDraw x="0" y="0" width="450" height="450">
+                            <Rectangle x="198" y="248" width="54" height="34">
+                                <Fill color="#161D24" />
+                            </Rectangle>
+                        </PartDraw>
+
+                        <!--
+                            Reserve warning. An almost empty tank leaves too little
+                            red water to notice, so the empty volume carries the
+                            signal as well.
+                        -->
+                        <Group x="0" y="0" width="450" height="450" name="tank_reserve_well">
+                            <Transform target="alpha" value="[BATTERY_PERCENT] &lt;= 15 ? 255 : 0" />
+                            <PartDraw x="0" y="0" width="450" height="450">
+                                <Rectangle x="198" y="248" width="54" height="34">
+                                    <Fill color="#40100C" />
+                                </Rectangle>
+                            </PartDraw>
+                        </Group>
+
+                        <!-- Water level, scaled around the lower tank edge (y = 282 of 450) -->
+                        <Group x="0" y="0" width="450" height="450" name="water_level"
+                            pivotX="0.5" pivotY="0.6267">
+                            <Transform target="scaleY" value="clamp([BATTERY_PERCENT] / 100, 0, 1)" />
+                            <PartDraw x="0" y="0" width="450" height="450">
+                                <Rectangle x="198" y="248" width="54" height="34">
+                                    <Fill color="#2E7FE0" />
+                                </Rectangle>
+                                <Rectangle x="198" y="248" width="54" height="3">
+                                    <Fill color="#8FC4FF" />
+                                </Rectangle>
+                            </PartDraw>
+
+                            <!-- Reserve: the remaining water turns red below 15 %. -->
+                            <Group x="0" y="0" width="450" height="450" name="water_reserve">
+                                <Transform target="alpha" value="[BATTERY_PERCENT] &lt;= 15 ? 255 : 0" />
+                                <PartDraw x="0" y="0" width="450" height="450">
+                                    <Rectangle x="198" y="248" width="54" height="34">
+                                        <Fill color="#D8412F" />
+                                    </Rectangle>
+                                    <Rectangle x="198" y="248" width="54" height="3">
+                                        <Fill color="#FF9C8A" />
+                                    </Rectangle>
+                                </PartDraw>
+                            </Group>
+                        </Group>
+
+                        <!-- Sight glass frame -->
+                        <PartDraw x="0" y="0" width="450" height="450">
+                            <Rectangle x="198" y="248" width="54" height="34">
+                                <Stroke color="#F0F1F2" thickness="2" />
+                            </Rectangle>
+                            <Rectangle x="198" y="264" width="8" height="2">
+                                <Fill color="#F0F1F2" />
+                            </Rectangle>
+                            <Rectangle x="244" y="264" width="8" height="2">
+                                <Fill color="#F0F1F2" />
+                            </Rectangle>
+                        </PartDraw>
+
+                        <!--
+                            Reserve warning: an almost empty tank leaves too little
+                            red water to notice, so the frame carries the signal.
+                        -->
+                        <Group x="0" y="0" width="450" height="450" name="tank_reserve_frame">
+                            <Transform target="alpha" value="[BATTERY_PERCENT] &lt;= 15 ? 255 : 0" />
+                            <PartDraw x="0" y="0" width="450" height="450">
+                                <Rectangle x="198" y="248" width="54" height="34">
+                                    <Stroke color="#FF6A57" thickness="3" />
+                                </Rectangle>
+                            </PartDraw>
+                        </Group>
+                    </Group>
+                </Compare>
+            </Condition>
+
+            <!--
+                Call-sign plate on the roof, carrying the date.
+                It rides on the truck and therefore turns with the hour hand,
+                so it is upside down or sideways for part of the day - which is
+                exactly how a plate on a real vehicle behaves.
+            -->
+            <Condition>
+                <Expressions>
+                    <Expression name="show_call_sign">
+                        <![CDATA[[CONFIGURATION.showCallSign] == "TRUE"]]>
+                    </Expression>
+                </Expressions>
+
+                <Compare expression="show_call_sign">
+                    <Group x="0" y="0" width="450" height="450" name="call_sign">
+                        <PartDraw x="0" y="0" width="450" height="450">
+                            <RoundRectangle x="197" y="128" width="56" height="26"
+                                cornerRadiusX="4" cornerRadiusY="4">
+                                <Fill color="#EFF1F3" />
+                            </RoundRectangle>
+                            <RoundRectangle x="197" y="128" width="56" height="26"
+                                cornerRadiusX="4" cornerRadiusY="4">
+                                <Stroke color="#15171A" thickness="2" />
+                            </RoundRectangle>
+                        </PartDraw>
+
+                        <PartText x="197" y="131" width="56" height="20">
+                            <Text align="CENTER">
+                                <Font family="sans-serif" size="19" weight="BOLD" color="#15171A">
+                                    <Template>%s/%s<Parameter expression="[DAY_Z]" /><Parameter expression="[MONTH_Z]" /></Template>
+                                </Font>
+                            </Text>
+                        </PartText>
+                    </Group>
+                </Compare>
+            </Condition>
+
+            <PartDraw x="0" y="0" width="450" height="450">
 
                 <!-- Wheels -->
                 <RoundRectangle x="178" y="118" width="15" height="44" cornerRadiusX="5" cornerRadiusY="5"><Fill color="#141518" /></RoundRectangle>
@@ -87,14 +254,53 @@
             </PartDraw>
 
             <!--
+                Driving lights, active at night only. The alpha is the inverse of
+                the daylight factor used by the background, so lights and
+                background cross-fade together.
+            -->
+            <Group x="0" y="0" width="450" height="450" name="driving_lights">
+                <Variant mode="AMBIENT" target="alpha" value="0" />
+                <Transform target="alpha"
+                    value="255 * (1 - clamp(([SECONDS_IN_DAY] - 21600) / 3600, 0, 1)
+                                    * clamp((72000 - [SECONDS_IN_DAY]) / 3600, 0, 1))" />
+
+                <!-- Head lamps lit -->
+                <PartDraw x="0" y="0" width="450" height="450">
+                    <Ellipse x="189" y="64" width="16" height="12"><Fill color="#FFF3C4" /></Ellipse>
+                    <Ellipse x="245" y="64" width="16" height="12"><Fill color="#FFF3C4" /></Ellipse>
+                </PartDraw>
+
+                <!-- Beams cast ahead of the truck -->
+                <PartDraw x="0" y="0" width="450" height="450" alpha="55">
+                    <Ellipse x="177" y="22" width="42" height="52"><Fill color="#FFF0B8" /></Ellipse>
+                    <Ellipse x="231" y="22" width="42" height="52"><Fill color="#FFF0B8" /></Ellipse>
+                </PartDraw>
+
+                <!-- Tail lamps -->
+                <PartDraw x="0" y="0" width="450" height="450">
+                    <RoundRectangle x="191" y="293" width="16" height="10" cornerRadiusX="3" cornerRadiusY="3">
+                        <Fill color="#E23B2E" />
+                    </RoundRectangle>
+                    <RoundRectangle x="243" y="293" width="16" height="10" cornerRadiusX="3" cornerRadiusY="3">
+                        <Fill color="#E23B2E" />
+                    </RoundRectangle>
+                </PartDraw>
+                <PartDraw x="0" y="0" width="450" height="450" alpha="90">
+                    <Ellipse x="185" y="287" width="28" height="22"><Fill color="#E23B2E" /></Ellipse>
+                    <Ellipse x="237" y="287" width="28" height="22"><Fill color="#E23B2E" /></Ellipse>
+                </PartDraw>
+            </Group>
+
+            <!--
                 Emergency lights.
                 Driven by the user configuration "blueLightMode":
-                off / hourly (active during minute 00) / always.
+                off / hourly (active during minute 00) / notification (while
+                unread notifications are pending) / always.
             -->
             <Condition>
                 <Expressions>
                     <Expression name="blue_lights_active">
-                        <![CDATA[[CONFIGURATION.blueLightMode] == "always" || ([CONFIGURATION.blueLightMode] == "hourly" && [MINUTE] == 0)]]>
+                        <![CDATA[[CONFIGURATION.blueLightMode] == "always" || ([CONFIGURATION.blueLightMode] == "hourly" && [MINUTE] == 0) || ([CONFIGURATION.blueLightMode] == "notification" && [UNREAD_NOTIFICATION_COUNT] > 0)]]>
                     </Expression>
                 </Expressions>
 
